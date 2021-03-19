@@ -45,8 +45,9 @@ class BottomPanel extends Component {
       isDismissWithPress: props.isBackDropDismissByPress
         ? props.isBackDropDismissByPress
         : false,
-      isBottomSheetDismissed:
-        props.initialPosition === 0 || props.initialPosition === '0%',
+        isBottomSheetDismissed: true,
+      // isBottomSheetDismissed:
+      //   props.initialPosition === 0 || props.initialPosition === '0%',
     };
   }
 
@@ -87,7 +88,6 @@ class BottomPanel extends Component {
       body,
       isBackDrop = false,
       isModal,
-      dragEnabled=true,
       isAnimatedYFromParent,
       animatedValueY,
       containerStyle,
@@ -99,6 +99,8 @@ class BottomPanel extends Component {
     snapPoints = getSnapPoints(snapPoints);
     initialPosition = getInitialPosition(initialPosition);
     const { isDismissWithPress, isBottomSheetDismissed } = this.state;
+    console.log('isAnimatedYFromParent', isAnimatedYFromParent );
+    console.log('isBottomSheetDismissed', isBottomSheetDismissed);
     return (
       <View style={styles.panelContainer} pointerEvents={'box-none'}>
         {/* Backdrop */}
@@ -109,24 +111,14 @@ class BottomPanel extends Component {
               styles.panelContainer,
               {
                 backgroundColor: backDropColor,
-                opacity: isAnimatedYFromParent
-                  ? animatedValueY.interpolate({
-                      inputRange: [0, Screen.height - 100],
-                      outputRange: [1, 0],
-                      extrapolateRight: 'clamp',
-                    })
-                  : this._deltaY.interpolate({
-                      inputRange: [0, Screen.height - 100],
-                      outputRange: [1, 0],
-                      extrapolateRight: 'clamp',
-                    }),
+                opacity: isBottomSheetDismissed ? 0 : 0.6,
               },
             ]}
           />
         )}
 
         <Interactable.View
-          dragEnabled={isModal ? false : dragEnabled}
+          dragEnabled={isModal ? false : true}
           verticalOnly={true}
           ref="bottomPanel"
           snapPoints={snapPoints}
@@ -148,14 +140,12 @@ class BottomPanel extends Component {
               />
             </TouchableWithoutFeedback>
           )}
-
+          {header}
           <View
             style={[
               isModal ? styles.modal : styles.panel,
-              { backgroundColor: bottomSheerColor },
               isRoundBorderWithTipHeader
                 ? {
-                    backgroundColor: '#f7f5eee8',
                     borderTopLeftRadius: 12,
                     borderTopRightRadius: 12,
                     shadowColor: '#000000',
@@ -169,9 +159,6 @@ class BottomPanel extends Component {
           >
             {!isModal && isRoundBorderWithTipHeader && (
               <View style={[styles.panelHandle, tipStyle]} />
-            )}
-            {!isModal && (
-              <View style={[styles.panelHeader, headerStyle]}>{header}</View>
             )}
             <View style={bodyStyle}>{body}</View>
           </View>
@@ -190,8 +177,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: 40,
     height: 6,
-    borderRadius: 4,
-    backgroundColor: '#00000040',
     marginVertical: 8,
   },
   panel: {
