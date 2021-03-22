@@ -42,6 +42,7 @@ class BottomPanel extends Component {
       snapToIndex: 0,
       points: 100,
       scrollValueY: new Animated.Value(0),
+      showHeader: false,
       isDismissWithPress: props.isBackDropDismissByPress
         ? props.isBackDropDismissByPress
         : false,
@@ -52,14 +53,22 @@ class BottomPanel extends Component {
   }
 
   onDrawerSnap = (snap) => {
-    const { snapPoints } = this.props;
+    const { snapPoints, isHeaderShown } = this.props;
+    console.log('snapPoints: ', snapPoints);
+    console.log('snap.nativeEvent.index', snap.nativeEvent.index);
     if (
       snapPoints[snap.nativeEvent.index] === 0 ||
       snapPoints[snap.nativeEvent.index] === '0%'
     ) {
-      this.setState({ isBottomSheetDismissed: true });
+      isHeaderShown(false, true)
+      this.setState({ isBottomSheetDismissed: true, showHeader: false });
+    } else if (snap.nativeEvent.index === 0 ||
+      snapPoints[snap.nativeEvent.index] === '100%') {
+      isHeaderShown(true, false)
+      this.setState({ isBottomSheetDismissed: false, showHeader: true });
     } else {
-      this.setState({ isBottomSheetDismissed: false });
+      isHeaderShown(false, true)
+      this.setState({ isBottomSheetDismissed: false, showHeader: false });
     }
   };
 
@@ -94,6 +103,8 @@ class BottomPanel extends Component {
       tipStyle,
       headerStyle,
       bodyStyle,
+      screenHeader,
+      isHeaderShown,
     } = this.props;
     let { snapPoints, initialPosition = { y: 0 } } = this.props;
     snapPoints = getSnapPoints(snapPoints);
@@ -140,7 +151,7 @@ class BottomPanel extends Component {
               />
             </TouchableWithoutFeedback>
           )}
-          {header}
+          {this.state.showHeader ?  screenHeader : header}
           <View
             style={[
               isModal ? styles.modal : styles.panel,
