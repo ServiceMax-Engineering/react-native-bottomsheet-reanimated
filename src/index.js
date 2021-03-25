@@ -54,20 +54,15 @@ class BottomPanel extends Component {
 
   onDrawerSnap = (snap) => {
     const { snapPoints, isHeaderShown } = this.props;
-    console.log('snapPoints: ', snapPoints);
-    console.log('snap.nativeEvent.index', snap.nativeEvent.index);
+    isHeaderShown(snap.nativeEvent.index)
     if (
       snapPoints[snap.nativeEvent.index] === 0 ||
       snapPoints[snap.nativeEvent.index] === '0%'
     ) {
-      isHeaderShown(false, true)
       this.setState({ isBottomSheetDismissed: true, showHeader: false });
-    } else if (snap.nativeEvent.index === 0 ||
-      snapPoints[snap.nativeEvent.index] === '100%') {
-      isHeaderShown(true, false)
+    }  else if(snap.nativeEvent.index === 0) {
       this.setState({ isBottomSheetDismissed: false, showHeader: true });
     } else {
-      isHeaderShown(false, true)
       this.setState({ isBottomSheetDismissed: false, showHeader: false });
     }
   };
@@ -110,8 +105,6 @@ class BottomPanel extends Component {
     snapPoints = getSnapPoints(snapPoints);
     initialPosition = getInitialPosition(initialPosition);
     const { isDismissWithPress, isBottomSheetDismissed } = this.state;
-    console.log('isAnimatedYFromParent', isAnimatedYFromParent );
-    console.log('isBottomSheetDismissed', isBottomSheetDismissed);
     return (
       <View style={styles.panelContainer} pointerEvents={'box-none'}>
         {/* Backdrop */}
