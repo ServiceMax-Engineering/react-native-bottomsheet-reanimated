@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import Animated from 'react-native-reanimated';
 import Interactable from 'react-native-interactable-reanimated';
+import {TouchableOpacity} from 'react-native-gesture-handler'
 
 const Screen = {
   width: Dimensions.get('window').width,
@@ -131,18 +132,19 @@ class BottomPanel extends Component {
           animatedValueY={isAnimatedYFromParent ? animatedValueY : this._deltaY}
           onSnap={this.onDrawerSnap}
         >
-          {!isModal && isDismissWithPress && !isBottomSheetDismissed && (
-            <TouchableWithoutFeedback
-              onPress={this.dismissBottomSheet}
-              disabled={isBackDrop ? false : true}
+          {!isModal && isDismissWithPress && !isBottomSheetDismissed  && (
+            <TouchableOpacity
+              onPress={() => this.dismissBottomSheet()}
+              disabled={false}
+              containerStyle={{
+                zIndex: 1,
+                height: Screen.height,
+                marginTop: -Screen.height,
+              }}
             >
               <View
-                style={{
-                  height: Screen.height,
-                  marginTop: -Screen.height,
-                }}
               />
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
           )}
           {this.state.showHeader ?  screenHeader : header}
           <View
