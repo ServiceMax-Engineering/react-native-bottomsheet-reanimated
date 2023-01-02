@@ -150,7 +150,7 @@
     "output": "lib",
     "targets": [
       "commonjs",
-      "module",
+      "module"
     ]
   },
   "dependencies": {
